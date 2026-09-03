@@ -1,0 +1,58 @@
+INSERT INTO public.projects (
+  slug, title, client, industry, category, year, description, challenge, approach, solution,
+  services, technologies, live_url, hero_image, images, display_order, featured, published
+) VALUES
+(
+  'monolith-capital',
+  'Monolith Capital',
+  'Monolith Capital',
+  'Finance',
+  'Brand & Website',
+  '2025',
+  'A restrained digital identity for an investment firm that never wanted to look like one. Typographic hierarchy carries the entire experience.',
+  'Monolith had grown by reputation alone. Their previous site read like a template and undercut the seriousness of the work.',
+  'We rebuilt the narrative around a single editorial spine: one statement per screen, no decoration, motion used only to guide the eye.',
+  'A twelve-column editorial system, a custom type scale, and a CMS the team updates themselves. Enquiry quality improved immediately.',
+  ARRAY['Brand strategy','Art direction','Web design','Development'],
+  ARRAY['TanStack Start','GSAP','PostgreSQL'],
+  '',
+  '/images/project-monolith.jpg',
+  ARRAY['/images/project-monolith.jpg','/images/studio-texture.jpg'],
+  0, true, true
+),
+(
+  'atlas-index',
+  'Atlas Index',
+  'Atlas',
+  'Publishing',
+  'Editorial Platform',
+  '2025',
+  'A reading platform for a long-form culture publication, designed around typography, pacing and silence.',
+  'Thousands of archive pieces with no structure, and a reading experience that pushed readers away after one article.',
+  'We designed a taxonomy first, then let the interface disappear: generous measure, deliberate rhythm, and quiet navigation.',
+  'Session depth doubled. Editors publish directly through a structured content model with full media control.',
+  ARRAY['Content strategy','Design system','Development'],
+  ARRAY['TanStack Query','Supabase','GSAP'],
+  '',
+  '/images/project-atlas.jpg',
+  ARRAY['/images/project-atlas.jpg'],
+  1, true, true
+),
+(
+  'veld-studio',
+  'Veld',
+  'Veld',
+  'Architecture',
+  'Portfolio',
+  '2024',
+  'A portfolio for an architecture practice where the work is shown at full scale and the interface stays out of the way.',
+  'Project photography was being cropped into thumbnails, losing the exact proportion the practice cares about.',
+  'Full-bleed asymmetric compositions with scroll-linked reveals, so each building enters the frame the way it was drawn.',
+  'A slower, more considered browsing experience — and a shortlist of enquiries that already understand the practice.',
+  ARRAY['Art direction','Web design','Development'],
+  ARRAY['GSAP','Lenis','Supabase'],
+  '',
+  '/images/project-veld.jpg',
+  ARRAY['/images/project-veld.jpg','/images/studio-texture.jpg'],
+  2, false, true
+);

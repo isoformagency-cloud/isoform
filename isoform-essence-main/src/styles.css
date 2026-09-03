@@ -1,0 +1,257 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * ISOFORM design system.
+ * Monochromatic ink/ivory with a single warm copper accent.
+ * Every color is a token — change here, the whole site follows.
+ */
+
+@theme inline {
+  --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: 0px;
+  --radius-md: 1px;
+  --radius-lg: 2px;
+  --radius-xl: 2px;
+  --radius-2xl: 2px;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-ink: var(--ink);
+  --color-ivory: var(--ivory);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-hairline: var(--hairline);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --tracking-display: -0.045em;
+  --tracking-wide-caps: 0.18em;
+}
+
+:root {
+  --radius: 0px;
+
+  --ink: oklch(0.16 0.006 60);
+  --ivory: oklch(0.958 0.008 85);
+
+  --background: oklch(0.958 0.008 85);
+  --foreground: oklch(0.16 0.006 60);
+  --card: oklch(0.975 0.006 85);
+  --card-foreground: oklch(0.16 0.006 60);
+  --popover: oklch(0.975 0.006 85);
+  --popover-foreground: oklch(0.16 0.006 60);
+  --primary: oklch(0.16 0.006 60);
+  --primary-foreground: oklch(0.958 0.008 85);
+  --secondary: oklch(0.91 0.007 85);
+  --secondary-foreground: oklch(0.16 0.006 60);
+  --muted: oklch(0.91 0.007 85);
+  --muted-foreground: oklch(0.52 0.008 70);
+  --accent: oklch(0.63 0.148 48);
+  --accent-foreground: oklch(0.98 0.008 85);
+  --destructive: oklch(0.52 0.19 25);
+  --destructive-foreground: oklch(0.98 0.008 85);
+  --border: oklch(0.16 0.006 60 / 12%);
+  --hairline: oklch(0.16 0.006 60 / 12%);
+  --input: oklch(0.16 0.006 60 / 20%);
+  --ring: oklch(0.63 0.148 48);
+}
+
+.dark,
+.on-ink {
+  --background: oklch(0.16 0.006 60);
+  --foreground: oklch(0.958 0.008 85);
+  --card: oklch(0.2 0.006 60);
+  --card-foreground: oklch(0.958 0.008 85);
+  --popover: oklch(0.2 0.006 60);
+  --popover-foreground: oklch(0.958 0.008 85);
+  --primary: oklch(0.958 0.008 85);
+  --primary-foreground: oklch(0.16 0.006 60);
+  --secondary: oklch(0.24 0.006 60);
+  --secondary-foreground: oklch(0.958 0.008 85);
+  --muted: oklch(0.24 0.006 60);
+  --muted-foreground: oklch(0.68 0.008 80);
+  --accent: oklch(0.7 0.15 52);
+  --accent-foreground: oklch(0.16 0.006 60);
+  --border: oklch(0.958 0.008 85 / 14%);
+  --hairline: oklch(0.958 0.008 85 / 14%);
+  --input: oklch(0.958 0.008 85 / 22%);
+  --ring: oklch(0.7 0.15 52);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv01";
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-accent-foreground);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: var(--tracking-display);
+    line-height: 0.92;
+    text-transform: uppercase;
+  }
+}
+
+/* --- Editorial primitives ------------------------------------------- */
+
+@utility shell {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  max-width: 96rem;
+  @media (min-width: 768px) {
+    padding-inline: 2.5rem;
+  }
+  @media (min-width: 1280px) {
+    padding-inline: 4rem;
+  }
+}
+
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: var(--tracking-wide-caps);
+  text-transform: uppercase;
+  color: var(--color-muted-foreground);
+}
+
+@utility display-xl {
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-display);
+  line-height: 0.86;
+  font-size: clamp(2.5rem, 8vw, 8.5rem);
+}
+
+@utility display-hero {
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-display);
+  line-height: 0.86;
+  font-size: clamp(2.5rem, 7.4vw, 7.5rem);
+}
+
+@utility display-lg {
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-display);
+  line-height: 0.9;
+  font-size: clamp(2rem, 6.4vw, 5.75rem);
+}
+
+@utility display-md {
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-display);
+  line-height: 0.95;
+  font-size: clamp(1.5rem, 3.4vw, 2.75rem);
+}
+
+@utility rule-t {
+  border-top: 1px solid var(--color-hairline);
+}
+
+@utility rule-b {
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+@utility link-underline {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -0.15em;
+    height: 1px;
+    width: 100%;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  &:hover::after,
+  &[data-active="true"]::after {
+    transform: scaleX(1);
+  }
+}
+
+@utility mask-line {
+  display: block;
+  overflow: hidden;
+}
+
+/* Reveal: visible by default so the design works with motion disabled */
+@utility reveal-target {
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@utility grain {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: radial-gradient(currentColor 0.5px, transparent 0.5px);
+    background-size: 3px 3px;
+  }
+}

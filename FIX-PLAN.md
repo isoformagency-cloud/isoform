@@ -198,11 +198,60 @@ Home page accessibility notes (not real problems):
 - Home page on a phone: the "Recently launched" links under the hero have a little more space.
 - Everything else should look and behave the same.
 
-## Stage 7: Final check and launch
+## Stage 7: New repo, new Vercel project, Supabase backend (13 Nov 2026)
 
-- [ ] Me: full `npm run check` (lint, build, smoke tests, accessibility scan), Lighthouse, and a check that every client link still works.
-- [ ] You: interface test on phone, tablet and laptop (see your checklist below).
-- [ ] You: deploy to Vercel. Me: test the live contact form and check the sitemap and social preview.
+Decided: Supabase **stores enquiries and runs a private `/admin` page**; Gmail alerts stay; you create the GitHub repo.
+
+### Done (code)
+
+| # | What | Where |
+|---|---|---|
+| 7.1 | Database setup: `enquiries` table, admin list, row-level security (only admins can read/change; nobody can add except the site's server), shared spam limit, nightly 12-month clean-up. **Tested**: 26 checks in a real Postgres engine (PGlite) with stand-ins for Supabase's auth and scheduler. | `supabase/migrations/0001_enquiries.sql` |
+| 7.2 | The contact form's server function **saves each enquiry in Supabase and emails it at the same time**. Success if either works, so a failed email never loses an enquiry. The spam limit (5 per 10 minutes per connection) is now shared across Vercel's servers. The secret key stays on the server. | `server/contact.js`, `server/supabase.js` |
+| 7.3 | **`/admin`**: sign in, read enquiries (filter New / Replied / Client / Closed / All), reply shortcuts (email, or WhatsApp and call for phone numbers), change status, delete (with confirmation), sign out. Non-admin accounts see nothing. Noindex, blocked in robots.txt, not in the sitemap, no footer. Supabase's code (55.7 KB) loads **only** on this page. | `src/pages/Admin.jsx`, `src/lib/supabaseClient.js`, `server/adminConfig.js`, `api/admin-config.js` |
+| 7.4 | Privacy policy updated: enquiries stored in Supabase (Mumbai), only the team can see them, spam counts deleted after 10 minutes, the admin page's sign-in is the only thing stored in a browser. | `src/pages/Privacy.jsx` |
+| 7.5 | Security headers allow the browser to talk to Supabase (`connect-src https://*.supabase.co`). | `vercel.json` |
+| 7.6 | Tests: 11 server unit tests (saving, email, fallbacks, shared limit, key handling) and 6 admin page tests against a **fake** Supabase. The test server ignores `.env`, so tests can never touch the real project or send email. `npm run check` passes: 0 lint warnings, 11 unit + 81 browser tests. | `tests/unit/`, `tests/admin.spec.js` |
+| 7.7 | New git repo here (branch `main`), first commit made **locally only**. Line endings pinned (`.gitattributes`); no secrets, `node_modules` or build output committed. | `.git`, `.gitignore`, `.gitattributes` |
+
+### Your steps, in order
+
+**A. GitHub**
+1. Create an **empty, private** repo (no README, no licence, no .gitignore), and send me its URL.
+2. I add it as the remote and push `main`.
+
+**B. Supabase**
+1. Create a project. Region: **South Asia (Mumbai)** (the privacy policy says Mumbai; if you pick another, tell me and I'll change `DATA_REGION` in `src/pages/Privacy.jsx`).
+2. SQL Editor: paste and run all of `supabase/migrations/0001_enquiries.sql`. If the `pg_cron` line fails: Database, Extensions, turn on **pg_cron**, run the file again.
+3. Authentication, Sign In / Providers: turn **off** "Allow new users to sign up".
+4. Authentication, Users, Add user: each team member (email + password, auto-confirm).
+5. SQL Editor, for each team member: `insert into public.admins (user_id) select id from auth.users where email = 'their@email';`
+6. Project Settings, API Keys: keep the **URL**, the **publishable** key and the **secret** key ready for Vercel. Never paste the secret key in chat, code or anywhere public.
+
+**C. Vercel (new project)**
+1. Add New, Project, import the GitHub repo (framework: Vite is detected; `vercel.json` sets the rest).
+2. Settings, Environment Variables (Production and Preview):
+   - `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`
+   - `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=465`, `SMTP_USER` (Gmail address), `SMTP_PASS` (Gmail **App password**)
+   - `SITE_URL` = the final address (e.g. `https://isoform.in`), no trailing slash
+3. Domains: add your domain if you have one, then **Redeploy** so `SITE_URL` is used.
+4. Tell me the live URL.
+
+**D. Gmail**
+- Enquiry alerts land in the inbox. The privacy policy promises deletion within 12 months, and only the database deletes automatically, so clear old alerts from Gmail yourself (search `older_than:1y`).
+
+### Then I check (with your OK, as agreed)
+- The live contact form: one real test enquiry, which should appear in `/admin` and arrive by email. (Sends a real email: I'll ask first.)
+- `/admin` sign-in with your account, status change and delete on the test enquiry.
+- `sitemap.xml`, canonical links and the social preview image on the live domain.
+
+---
+
+## Stage 8: Final check and launch
+
+- [ ] Me: full `npm run check`, Lighthouse on the live site, and a check that every client link still works.
+- [ ] You: interface test on phone, tablet and laptop, including `/admin`.
+- [ ] You: point the domain at the new Vercel project (if not done in Stage 7) and retire the old one.
 
 ---
 

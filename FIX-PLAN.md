@@ -216,9 +216,8 @@ Decided: Supabase **stores enquiries and runs a private `/admin` page**; Gmail a
 
 ### Your steps, in order
 
-**A. GitHub**
-1. Create an **empty, private** repo (no README, no licence, no .gitignore), and send me its URL.
-2. I add it as the remote and push `main`.
+**A. GitHub** ✅ (13 Nov 2026)
+- Repo: https://github.com/isoformagency-cloud/isoform (branch `main`, pushed).
 
 **B. Supabase**
 1. Create a project. Region: **South Asia (Mumbai)** (the privacy policy says Mumbai; if you pick another, tell me and I'll change `DATA_REGION` in `src/pages/Privacy.jsx`).

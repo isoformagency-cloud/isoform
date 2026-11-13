@@ -1,0 +1,1711 @@
+@import 'tailwindcss';
+
+/* ==========================================================================
+   ISOFORM design tokens
+   Violet is sampled from the logo (#5A25E2). Everything else is neutral.
+   ========================================================================== */
+@theme {
+  --font-sans:
+    'Outfit Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: 'Instrument Serif', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+
+  --color-ink: #0b0b0f;
+  --color-ink-2: #111117;
+  --color-surface: #16161d;
+  --color-surface-2: #1d1d26;
+  --color-line: rgb(255 255 255 / 0.1);
+  --color-line-strong: rgb(255 255 255 / 0.2);
+  --color-paper: #f4f3f8;
+  --color-fg: #f6f5fb;
+  --color-muted: #adabbb;
+  --color-faint: #8b899a;
+
+  --color-brand: #5a25e2;
+  --color-brand-700: #3f16ad;
+  --color-brand-400: #7b52f0;
+  --color-brand-300: #a68cff;
+  --color-brand-200: #cbbdff;
+  --color-brand-100: #e9e3ff;
+
+  --color-danger: #ff9b9b;
+  --color-success: #86e3b6;
+
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+@layer base {
+  html {
+    background-color: var(--color-ink);
+    color: var(--color-fg);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: 7rem;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    font-weight: 350;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* No overflow-x: clip here on purpose: it hid layout bugs that were too wide.
+       Sections with oversized decorations clip themselves, and the overflow
+       test in tests/pages.spec.js fails if anything makes the page scroll sideways. */
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 450;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  p,
+  li,
+  dd {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-brand);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-300);
+    outline-offset: 3px;
+  }
+
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:not(:disabled),
+  summary,
+  label[for] {
+    cursor: pointer;
+  }
+
+  main:focus {
+    outline: none;
+  }
+}
+
+/* ==========================================================================
+   Type and layout utilities
+   ========================================================================== */
+@utility wrap {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 92rem;
+  padding-inline: clamp(1.25rem, 4.4vw, 4.5rem);
+}
+
+@utility label-caps {
+  font-size: 0.75rem;
+  line-height: 1.3;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+@utility serif-accent {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.07em;
+  letter-spacing: -0.02em;
+}
+
+@utility type-h1 {
+  font-size: clamp(2.6rem, 7.4vw, 6.75rem);
+  line-height: 0.96;
+  letter-spacing: -0.045em;
+}
+
+@utility type-h2 {
+  font-size: clamp(2.15rem, 5.4vw, 4.75rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+@utility type-h3 {
+  font-size: clamp(1.5rem, 2.5vw, 2.125rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+@utility type-lead {
+  font-size: clamp(1.125rem, 1.5vw, 1.375rem);
+  line-height: 1.5;
+  font-weight: 300;
+}
+
+@layer components {
+  /* ------------------------------------------------------------------------
+     Skip link
+     ------------------------------------------------------------------------ */
+  .skip-link {
+    position: fixed;
+    left: 1rem;
+    top: 1rem;
+    z-index: 100;
+    transform: translateY(-250%);
+    border-radius: 0.75rem;
+    background: #fff;
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+  .skip-link:focus {
+    transform: none;
+  }
+
+  /* ------------------------------------------------------------------------
+     Buttons and links
+     ------------------------------------------------------------------------ */
+  .btn {
+    display: inline-flex;
+    height: 3.25rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    border-radius: 999px;
+    padding: 0 1.6rem;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    transition:
+      background-color 0.25s,
+      border-color 0.25s,
+      color 0.25s,
+      transform 0.2s;
+  }
+  .btn:active {
+    transform: scale(0.98);
+  }
+  .btn svg {
+    flex: none;
+    transition: transform 0.35s var(--ease-expo);
+  }
+  .btn:hover svg {
+    transform: translateX(4px);
+  }
+  .btn-sm {
+    height: 2.75rem;
+    padding: 0 1.25rem;
+    font-size: 0.9375rem;
+  }
+  .btn-primary {
+    background: var(--color-brand);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.2);
+  }
+  .btn-primary:hover {
+    background: var(--color-brand-400);
+  }
+  .btn-secondary {
+    border: 1px solid rgb(255 255 255 / 0.24);
+    color: var(--color-fg);
+  }
+  .btn-secondary:hover {
+    border-color: rgb(255 255 255 / 0.5);
+    background: rgb(255 255 255 / 0.07);
+  }
+  .btn-light {
+    background: #fff;
+    color: var(--color-ink);
+  }
+  .btn-light:hover {
+    background: var(--color-brand-100);
+  }
+  .btn:disabled,
+  .btn[aria-disabled='true'] {
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  .link-arrow {
+    display: inline-flex;
+    max-width: 100%;
+    align-items: center;
+    gap: 0.5rem;
+    overflow-wrap: anywhere;
+    border-bottom: 1px solid rgb(255 255 255 / 0.3);
+    padding-bottom: 0.25rem;
+    font-weight: 500;
+    color: #fff;
+    transition: border-color 0.25s;
+  }
+  .link-arrow:hover {
+    border-color: #fff;
+  }
+  .link-arrow svg {
+    flex: none;
+    transition: transform 0.35s var(--ease-expo);
+  }
+  .link-arrow:hover svg {
+    transform: translate(3px, -3px);
+  }
+
+  .text-link {
+    text-decoration: underline;
+    text-decoration-color: rgb(255 255 255 / 0.35);
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color 0.2s;
+  }
+  .text-link:hover {
+    text-decoration-color: currentColor;
+  }
+
+  /* ------------------------------------------------------------------------
+     Logo
+     ------------------------------------------------------------------------ */
+  .wordmark {
+    display: inline-block;
+    aspect-ratio: 3408 / 336;
+    background-color: currentColor;
+    -webkit-mask: url('./assets/brand/wordmark.svg') center / contain no-repeat;
+    mask: url('./assets/brand/wordmark.svg') center / contain no-repeat;
+  }
+
+  /* ------------------------------------------------------------------------
+     Motion helpers
+     ------------------------------------------------------------------------ */
+  /* Words that rise into place on load. clip-path keeps the text baseline intact. */
+  .rise {
+    display: inline-block;
+    clip-path: inset(-0.12em -0.12em -0.2em -0.06em);
+  }
+  .rise > span {
+    display: inline-block;
+    animation: rise-in 1.05s var(--ease-expo) both;
+    animation-delay: calc(var(--i, 0) * 65ms + var(--rise-delay, 80ms));
+  }
+
+  .fade-up {
+    animation: fade-up 0.9s var(--ease-expo) both;
+    animation-delay: var(--delay, 0ms);
+  }
+
+  /* Scroll reveal. The hidden state is only ever set by JavaScript, on
+     elements that start below the fold, so the page is complete without it. */
+  .reveal {
+    transition:
+      opacity 0.9s var(--ease-expo),
+      transform 0.9s var(--ease-expo);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .reveal[data-reveal='hidden'] {
+    opacity: 0;
+    transform: translateY(1.75rem);
+    transition: none;
+  }
+
+  /* ------------------------------------------------------------------------
+     Header
+     ------------------------------------------------------------------------ */
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 50;
+  }
+  .site-header[data-intro='hidden'] {
+    visibility: hidden;
+  }
+  .header-replica {
+    position: absolute;
+    inset: 0 0 auto 0;
+    z-index: 5;
+  }
+  .header-scrim {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 7.5rem;
+    background: linear-gradient(to bottom, rgb(11 11 15 / 0.97), rgb(11 11 15 / 0.86) 50%, rgb(11 11 15 / 0));
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent);
+    mask-image: linear-gradient(to bottom, #000 62%, transparent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s;
+  }
+  [data-scrolled='true'] > .header-scrim {
+    opacity: 1;
+  }
+  /* Phones and tablets: skip the blur. The scrim is nearly opaque there anyway,
+     and backdrop blur is costly on low-end phones. */
+  @media (max-width: 63.99rem) {
+    .header-scrim {
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  .nav-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.125rem;
+    border-radius: 999px;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    background: rgb(24 24 32 / 0.66);
+    padding: 0.3rem;
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+  }
+  .nav-link {
+    display: inline-flex;
+    height: 2.4rem;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0 0.95rem;
+    font-size: 0.9375rem;
+    font-weight: 400;
+    color: var(--color-muted);
+    transition:
+      color 0.2s,
+      background-color 0.2s;
+  }
+  .nav-link:hover {
+    color: #fff;
+  }
+  .nav-link[aria-current='page'],
+  .nav-link.active {
+    background: rgb(255 255 255 / 0.1);
+    color: #fff;
+  }
+  .nav-chevron {
+    display: inline-flex;
+    height: 2.4rem;
+    width: 1.75rem;
+    align-items: center;
+    justify-content: center;
+    margin-left: -0.6rem;
+    border-radius: 999px;
+    color: var(--color-muted);
+    transition: color 0.2s;
+  }
+  .nav-chevron:hover {
+    color: #fff;
+  }
+  .nav-chevron svg {
+    transition: transform 0.3s var(--ease-expo);
+  }
+  .nav-group[data-open='true'] .nav-chevron svg {
+    transform: rotate(180deg);
+  }
+  .nav-dropdown {
+    position: absolute;
+    left: -0.35rem;
+    top: calc(100% + 0.85rem);
+    width: 24rem;
+    border-radius: 1.25rem;
+    border: 1px solid var(--color-line);
+    background: rgb(19 19 25 / 0.97);
+    padding: 0.5rem;
+    box-shadow: 0 30px 70px -24px rgb(0 0 0 / 0.8);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-0.4rem);
+    transition:
+      opacity 0.2s,
+      transform 0.3s var(--ease-expo),
+      visibility 0s 0.2s;
+  }
+  /* bridges the gap so the pointer can travel from the link to the panel */
+  .nav-dropdown::before {
+    content: '';
+    position: absolute;
+    inset: -1rem 0 auto 0;
+    height: 1rem;
+  }
+  .nav-group[data-open='true'] .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition-delay: 0s;
+  }
+  .nav-dropdown a {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+    align-items: baseline;
+    border-radius: 0.85rem;
+    padding: 0.7rem 0.85rem;
+    transition: background-color 0.2s;
+  }
+  .nav-dropdown a:hover,
+  .nav-dropdown a:focus-visible {
+    background: rgb(255 255 255 / 0.07);
+  }
+
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--color-ink);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.3s,
+      visibility 0s 0.3s;
+  }
+  .mobile-menu[data-open='true'] {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+  .mobile-menu[data-open='true'] .mobile-menu-item {
+    animation: fade-up 0.7s var(--ease-expo) both;
+    animation-delay: calc(var(--i, 0) * 45ms + 80ms);
+  }
+
+  /* ------------------------------------------------------------------------
+     Intro: a light page with three devices. Scrolling zooms into the centre
+     screen, which holds the real hero.
+     --s0  starting scale of the scene
+     --ty0 starting vertical shift, as a fraction of the stage height
+     --r0  screen corner radius, as a fraction of the viewport width
+     ------------------------------------------------------------------------ */
+  .intro-stage {
+    --intro-d: 115vh;
+    --s0: 0.5;
+    --ty0: -0.035;
+    --r0: 0.011;
+    --bz: 1.5vw;
+    position: relative;
+    height: calc(100vh + var(--intro-d));
+    height: calc(100lvh + var(--intro-d));
+    background: var(--color-ink);
+  }
+  .intro-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100lvh;
+    overflow: hidden;
+  }
+  .intro-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(60% 46% at 50% 58%, rgb(90 37 226 / 0.16), rgb(90 37 226 / 0) 70%),
+      radial-gradient(90% 70% at 50% 38%, #fff 0%, var(--color-paper) 58%, #e6e3f2 100%);
+  }
+  .intro-chrome {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    color: var(--color-ink);
+  }
+  .intro-chrome > * {
+    pointer-events: auto;
+  }
+  .intro-hint {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100lvh - 100svh + 1.5rem);
+    display: inline-flex;
+    transform: translateX(-50%);
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7rem;
+    border-radius: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--color-ink);
+  }
+  .intro-hint:focus-visible {
+    outline-color: var(--color-brand);
+  }
+  .intro-hint-line {
+    display: block;
+    height: 2rem;
+    width: 1px;
+    transform-origin: top;
+    background: var(--color-ink);
+    animation: hint-line 2s var(--ease-expo) infinite;
+  }
+  .hint-touch {
+    display: none;
+  }
+  @media (hover: none) and (pointer: coarse) {
+    .hint-mouse {
+      display: none;
+    }
+    .hint-touch {
+      display: inline;
+    }
+  }
+
+  .intro-scene {
+    position: absolute;
+    inset: 0;
+    isolation: isolate;
+    transform-origin: 50% 50%;
+    transform: translate3d(0, calc(var(--ty0) * 100vh), 0) scale(var(--s0));
+  }
+  .intro-screen {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    border-radius: calc(var(--r0) * 100vw);
+    background: var(--color-ink);
+    container-type: size;
+  }
+  .intro-bezel {
+    position: absolute;
+    inset: calc(var(--bz) * -1);
+    z-index: 0;
+    border-radius: calc(var(--r0) * 100vw + var(--bz) * 0.9);
+    background: #0c0c11;
+    box-shadow:
+      inset 0 0 0 0.12vw #2c2c37,
+      0 0 0 0.08vw #000;
+  }
+  .intro-bezel::after {
+    /* camera */
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: calc(var(--bz) * 0.5);
+    height: 0.34vw;
+    width: 0.34vw;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: #30303c;
+  }
+  .intro-base {
+    position: absolute;
+    left: -8.5%;
+    right: -8.5%;
+    top: calc(100% + var(--bz));
+    z-index: 0;
+    height: 2.1vw;
+    border-radius: 0.25vw 0.25vw 1.5vw 1.5vw;
+    background: linear-gradient(180deg, #3a3a46 0%, #23232c 22%, #15151b 100%);
+    box-shadow: inset 0 0.1vw 0 #55556a;
+  }
+  .intro-base::after {
+    /* thumb notch */
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    height: 0.5vw;
+    width: 13%;
+    transform: translateX(-50%);
+    border-radius: 0 0 0.6vw 0.6vw;
+    background: #0e0e13;
+  }
+  .intro-floor {
+    position: absolute;
+    left: -30%;
+    right: -30%;
+    top: calc(100% + var(--bz) + 2.1vw);
+    z-index: -2;
+    height: 9vw;
+    background: radial-gradient(50% 100% at 50% 0%, rgb(35 14 105 / 0.32), rgb(35 14 105 / 0) 72%);
+  }
+  .intro-device {
+    position: absolute;
+    overflow: hidden;
+    background: #0c0c11;
+    box-shadow:
+      inset 0 0 0 0.12vw #2c2c37,
+      0 2vw 4vw -1.5vw rgb(20 8 70 / 0.45);
+  }
+  .intro-device img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+  .intro-tablet {
+    left: -30%;
+    bottom: calc((var(--bz) + 2.1vw) * -1);
+    z-index: -1;
+    width: 43%;
+    aspect-ratio: 4 / 3;
+    border-radius: 1.9vw;
+    padding: 1.1vw;
+  }
+  .intro-tablet img {
+    border-radius: 0.9vw;
+  }
+  .intro-phone {
+    right: -10.5%;
+    bottom: calc((var(--bz) + 2.1vw) * -1);
+    z-index: 2;
+    width: 15.5%;
+    aspect-ratio: 9 / 19;
+    border-radius: 2.5vw;
+    padding: 0.55vw;
+  }
+  .intro-phone img {
+    border-radius: 2vw;
+  }
+  .intro-stage[data-entered='true'] .intro-only {
+    visibility: hidden;
+  }
+  /* Until you are inside, the small screen is one big "come in" target. */
+  .intro-stage:not([data-entered='true']) .intro-screen {
+    cursor: pointer;
+  }
+  .intro-stage:not([data-entered='true']) .intro-screen > * {
+    pointer-events: none;
+  }
+
+  /* Portrait: the centre device becomes a phone, the other two peek from behind. */
+  @media (max-aspect-ratio: 4 / 5) {
+    .intro-stage {
+      --intro-d: 95vh;
+      --s0: 0.56;
+      --ty0: -0.025;
+      --r0: 0.1;
+      --bz: 2.6vw;
+    }
+    .intro-base,
+    .intro-bezel::after {
+      display: none;
+    }
+    .intro-floor {
+      top: calc(100% + var(--bz));
+      left: -45%;
+      right: -45%;
+      height: 26vw;
+    }
+    .intro-tablet {
+      left: -74%;
+      bottom: 9%;
+      width: 118%;
+      aspect-ratio: 16 / 10;
+      border-radius: 3.6vw;
+      padding: 2vw;
+    }
+    .intro-tablet img {
+      border-radius: 1.8vw;
+    }
+    .intro-phone {
+      right: -50%;
+      bottom: -3%;
+      z-index: -1;
+      width: 64%;
+      aspect-ratio: 3 / 4;
+      border-radius: 5vw;
+      padding: 2.2vw;
+    }
+    .intro-phone img {
+      border-radius: 3vw;
+    }
+  }
+
+  /* No intro for people who prefer reduced motion: the site starts at the hero. */
+  @media (prefers-reduced-motion: reduce) {
+    .intro-stage {
+      height: auto;
+    }
+    .intro-sticky,
+    .intro-scene,
+    .intro-screen {
+      position: static;
+      height: auto;
+      overflow: visible;
+      border-radius: 0;
+      transform: none;
+      container-type: normal;
+    }
+    .intro-only {
+      display: none;
+    }
+    .intro-stage .intro-screen {
+      cursor: auto;
+    }
+    .intro-stage .intro-screen > * {
+      pointer-events: auto;
+    }
+    .site-header[data-intro='hidden'] {
+      visibility: visible;
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+     Hero
+     ------------------------------------------------------------------------ */
+  .hero {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    min-height: 100svh;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--color-ink);
+  }
+  .intro-screen .hero {
+    height: 100%;
+    min-height: 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .intro-screen .hero {
+      height: auto;
+      min-height: 100svh;
+    }
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(56% 64% at 84% 10%, rgb(90 37 226 / 0.6) 0%, rgb(90 37 226 / 0.17) 44%, rgb(90 37 226 / 0) 72%),
+      radial-gradient(44% 46% at 2% 108%, rgb(90 37 226 / 0.3) 0%, rgb(90 37 226 / 0) 70%);
+  }
+  .hero-contours {
+    position: absolute;
+    right: -15%;
+    top: -38%;
+    z-index: -1;
+    width: min(80vw, 72rem);
+    max-width: none;
+    opacity: 0.8;
+    -webkit-mask-image: radial-gradient(closest-side, #000 52%, transparent 100%);
+    mask-image: radial-gradient(closest-side, #000 52%, transparent 100%);
+    animation: drift 140s linear infinite;
+  }
+  .hero-title {
+    font-size: clamp(3.25rem, min(11.4vw, 23cqh), 11rem);
+    line-height: 0.88;
+    letter-spacing: -0.052em;
+    font-weight: 450;
+  }
+  .hero-br {
+    display: none;
+  }
+  @media (max-aspect-ratio: 4 / 5) {
+    .hero-contours {
+      right: -62%;
+      top: -16%;
+      width: 165vw;
+    }
+    .hero-title {
+      font-size: clamp(3rem, min(18.5vw, 10.6cqh), 7.5rem);
+      line-height: 0.9;
+    }
+    .hero-br {
+      display: inline;
+    }
+  }
+  /* ------------------------------------------------------------------------
+     Contour motif (decorative)
+     ------------------------------------------------------------------------ */
+  .contours {
+    pointer-events: none;
+    position: absolute;
+    max-width: none;
+    user-select: none;
+    -webkit-mask-image: radial-gradient(closest-side, #000 48%, transparent 100%);
+    mask-image: radial-gradient(closest-side, #000 48%, transparent 100%);
+  }
+  .glow {
+    pointer-events: none;
+    position: absolute;
+    background: radial-gradient(closest-side, rgb(90 37 226 / 0.5), rgb(90 37 226 / 0));
+  }
+
+  /* ------------------------------------------------------------------------
+     Studio statement: inline picture pills that open as you scroll
+     --p is set from JavaScript (0 to 1). Default 1 = fully open.
+     ------------------------------------------------------------------------ */
+  .statement {
+    --p: 1;
+    font-size: clamp(2rem, 6.7vw, 6.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.045em;
+    font-weight: 450;
+    white-space: nowrap;
+  }
+  .statement .line {
+    display: block;
+  }
+  @media (min-width: 64rem) {
+    .statement .line:nth-child(2) {
+      padding-left: 9%;
+    }
+    .statement .line:nth-child(3) {
+      padding-left: 21%;
+    }
+    .statement .line:nth-child(4) {
+      padding-left: 9%;
+    }
+  }
+  .pill {
+    --w: clamp(0, calc(var(--p) * 1.9 - var(--i) * 0.3), 1);
+    position: relative;
+    display: inline-block;
+    height: 0.74em;
+    width: calc(1.9em * var(--w));
+    margin-right: calc(0.2em * var(--w));
+    overflow: hidden;
+    border-radius: 999px;
+    vertical-align: -0.05em;
+    opacity: var(--w);
+  }
+  .pill img {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+  .pill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.25);
+  }
+
+  /* Paragraph whose words light up as it scrolls through the viewport. */
+  .word-reveal {
+    --p: 1;
+  }
+  .word-reveal > span {
+    opacity: clamp(0.22, calc((var(--p) * (var(--n) + 6) - var(--i)) / 6), 1);
+  }
+
+  /* ------------------------------------------------------------------------
+     Service index rows
+     ------------------------------------------------------------------------ */
+  .service-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.75rem minmax(0, 1fr) 1.5rem;
+    align-items: baseline;
+    column-gap: 1rem;
+    row-gap: 0.5rem;
+    border-bottom: 1px solid var(--color-line);
+    padding-block: 1.6rem;
+  }
+  .service-row::before {
+    content: '';
+    position: absolute;
+    inset: 0 -1.25rem;
+    border-radius: 1rem;
+    background: linear-gradient(90deg, rgb(90 37 226 / 0.2), rgb(90 37 226 / 0) 75%);
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+  .service-row:hover::before,
+  .service-row:focus-visible::before {
+    opacity: 1;
+  }
+  .service-row > * {
+    position: relative;
+  }
+  .service-row .row-title,
+  .service-row .row-arrow {
+    transition: transform 0.5s var(--ease-expo);
+  }
+  .service-row:hover .row-title {
+    transform: translateX(0.6rem);
+  }
+  .service-row:hover .row-arrow {
+    transform: translate(0.25rem, -0.25rem);
+  }
+  @media (min-width: 64rem) {
+    .service-row {
+      grid-template-columns: 6rem minmax(0, 1.05fr) minmax(0, 1fr) 2rem;
+      column-gap: 2rem;
+      padding-block: 2.1rem;
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+     Services showcase (home): a phone that turns as you scroll while its
+     screen steps through the five services. Default = a plain list with a
+     still phone. [data-live] (set by JavaScript where it fits) = pinned and
+     scroll-driven. --p is scroll progress, 0 to 1.
+     ------------------------------------------------------------------------ */
+  .showcase {
+    position: relative;
+    /* clip (not hidden) keeps the sticky child working */
+    overflow-x: clip;
+    border-top: 1px solid var(--color-line);
+  }
+  .showcase-sticky {
+    padding-block: 6rem;
+  }
+  @media (min-width: 48rem) {
+    .showcase-sticky {
+      padding-block: 9rem;
+    }
+  }
+  .showcase-grid {
+    display: grid;
+    align-items: center;
+    gap: 4rem;
+  }
+  @media (min-width: 64rem) {
+    .showcase-grid {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 3rem;
+    }
+  }
+  .showcase-copy h2 {
+    font-size: clamp(2.15rem, 4.6vw, 4.25rem);
+  }
+  .showcase-list {
+    margin-top: 2.5rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .showcase-item {
+    border-top: 1px solid var(--color-line);
+  }
+  .showcase-row {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding-block: 1.1rem;
+  }
+  .showcase-row h3 {
+    font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    transition:
+      color 0.4s,
+      transform 0.5s var(--ease-expo);
+  }
+  .showcase-row:hover h3 {
+    transform: translateX(0.4rem);
+  }
+  .showcase-detail {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.6s var(--ease-expo);
+  }
+  .showcase-detail > div {
+    min-height: 0;
+    overflow: hidden;
+    padding-left: 2.75rem;
+  }
+  .showcase-dots {
+    display: none;
+  }
+  .showcase-dots a {
+    display: inline-flex;
+    height: 2.5rem;
+    min-width: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: 1px solid rgb(255 255 255 / 0.18);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-muted);
+    transition:
+      background-color 0.3s,
+      border-color 0.3s,
+      color 0.3s;
+  }
+  .showcase-dots a[data-current] {
+    border-color: var(--color-brand-300);
+    background: var(--color-brand);
+    color: #fff;
+  }
+
+  .showcase-stage {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    height: clamp(26rem, 120vw, 38rem);
+    align-items: center;
+    justify-content: center;
+    perspective: 1600px;
+  }
+  .showcase-stage .glow {
+    z-index: -2;
+    opacity: 0.5;
+  }
+  .showcase-orb {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: -1;
+    width: 125%;
+    max-width: none;
+    translate: -50% -50%;
+    rotate: calc(var(--p, 0) * 120deg);
+    opacity: 0.55;
+    -webkit-mask-image: radial-gradient(closest-side, #000 45%, transparent 100%);
+    mask-image: radial-gradient(closest-side, #000 45%, transparent 100%);
+  }
+  .showcase-phone {
+    --t: var(--p, 0.35);
+    position: relative;
+    height: min(94%, 40rem);
+    aspect-ratio: 9 / 19.5;
+    container-type: inline-size;
+    border-radius: 15% / 6.9%;
+    background: linear-gradient(145deg, #2c2c37, #0c0c11 30%, #0c0c11 75%, #24242e);
+    box-shadow:
+      inset 0 0 0 1.5px #3a3a47,
+      0 0 0 1px #000,
+      0 3rem 6rem -2rem rgb(20 8 70 / 0.75),
+      0 0 5rem rgb(90 37 226 / 0.22);
+    transform: rotateX(9deg) rotateY(calc(-24deg + var(--t) * 48deg)) rotateZ(calc(7deg - var(--t) * 14deg));
+  }
+  .showcase-screens {
+    position: absolute;
+    inset: 1.65% 3.7%;
+    overflow: hidden;
+    border-radius: 12.5% / 5.8%;
+    background: #000;
+    font-size: 4.6cqi;
+    line-height: 1.3;
+  }
+  .showcase-screens::after {
+    /* camera island */
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 1.6%;
+    z-index: 3;
+    height: 3%;
+    width: 30%;
+    translate: -50% 0;
+    border-radius: 999px;
+    background: #000;
+  }
+  .showcase-screen {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: scale(1.06);
+    transition:
+      opacity 0.5s,
+      transform 0.8s var(--ease-expo);
+  }
+  .showcase-screen[data-current] {
+    opacity: 1;
+    transform: none;
+  }
+  .showcase-chip {
+    position: absolute;
+    left: 50%;
+    bottom: 7%;
+    z-index: 2;
+    display: inline-flex;
+    translate: calc(-50% - 5.5rem) 0;
+    align-items: center;
+    gap: 0.6rem;
+    white-space: nowrap;
+    border-radius: 999px;
+    border: 1px solid rgb(255 255 255 / 0.14);
+    background: rgb(24 24 32 / 0.82);
+    padding: 0.6rem 1rem;
+    font-size: 0.875rem;
+    color: #fff;
+    box-shadow: 0 1.5rem 3rem -1rem rgb(0 0 0 / 0.8);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    animation: fade-up 0.6s var(--ease-expo) both;
+  }
+  .showcase:not([data-live]) .showcase-chip {
+    display: none;
+  }
+  @media (max-width: 63.99rem) {
+    .showcase-chip {
+      display: none;
+    }
+  }
+  /* little things moving on the illustrated screens */
+  .cap-word {
+    opacity: 0.3;
+  }
+  .showcase-screen[data-current] .cap-word {
+    animation: cap-on 0.3s ease both;
+    animation-delay: calc(var(--i) * 230ms + 350ms);
+  }
+  .showcase-screen[data-current] .playhead {
+    animation: playhead 3.2s linear infinite;
+  }
+  .chat-msg {
+    opacity: 0;
+  }
+  .showcase-screen[data-current] .chat-msg {
+    animation: fade-up 0.6s var(--ease-expo) both;
+    animation-delay: calc(var(--i) * 550ms + 300ms);
+  }
+
+  /* How long the section holds the page: 2 extra screens on desktop, 1.5 on
+     phones and tablets (it was 3, which felt long). */
+  .showcase[data-live] {
+    height: calc(100vh + 200vh);
+    height: calc(100svh + 200svh);
+  }
+  @media (max-width: 63.99rem) {
+    .showcase[data-live] {
+      height: calc(100vh + 150vh);
+      height: calc(100svh + 150svh);
+    }
+  }
+  .showcase[data-live] .showcase-sticky {
+    position: sticky;
+    top: 0;
+    display: flex;
+    height: 100vh;
+    height: 100svh;
+    align-items: center;
+    overflow: hidden;
+    padding-block: 5.5rem 1.5rem;
+  }
+  .showcase[data-live] .showcase-phone {
+    will-change: transform;
+  }
+  .showcase[data-live] .showcase-detail {
+    grid-template-rows: 0fr;
+  }
+  .showcase[data-live] .showcase-detail > div {
+    visibility: hidden;
+    transition: visibility 0s 0.6s;
+  }
+  .showcase[data-live] [data-current] > .showcase-detail {
+    grid-template-rows: 1fr;
+  }
+  .showcase[data-live] [data-current] > .showcase-detail > div {
+    visibility: visible;
+    transition-delay: 0s;
+  }
+  .showcase[data-live] .showcase-item:not([data-current]) h3 {
+    color: var(--color-faint);
+  }
+  @media (min-width: 64rem) {
+    .showcase[data-live] .showcase-stage {
+      height: min(78svh, 44rem);
+    }
+  }
+  @media (min-width: 64rem) and (max-height: 50rem) {
+    .showcase[data-live] .showcase-desc {
+      display: none;
+    }
+    .showcase[data-live] .showcase-row {
+      padding-block: 0.75rem;
+    }
+    .showcase[data-live] .showcase-copy h2 {
+      font-size: clamp(2rem, min(4.6vw, 8svh), 4.25rem);
+    }
+  }
+  /* short laptop screens (e.g. 1366 x 768, about 650px inside the browser) */
+  @media (min-width: 64rem) and (max-height: 44rem) {
+    .showcase[data-live] .showcase-sticky {
+      padding-block: 6rem 1rem;
+    }
+    .showcase[data-live] .showcase-all,
+    .showcase[data-live] .showcase-head p {
+      display: none;
+    }
+    .showcase[data-live] .showcase-list {
+      margin-top: 1.25rem;
+    }
+    .showcase[data-live] .showcase-row {
+      padding-block: 0.55rem;
+    }
+    .showcase[data-live] .showcase-row h3 {
+      font-size: clamp(1.15rem, 3.6svh, 1.6rem);
+    }
+    .showcase[data-live] .showcase-copy h2 {
+      margin-top: 0.75rem;
+      font-size: clamp(1.9rem, 7.5svh, 3.25rem);
+    }
+    .showcase[data-live] .showcase-detail .text-lg {
+      font-size: 1rem;
+    }
+    .showcase[data-live] .showcase-detail .link-arrow {
+      margin-top: 0.5rem;
+      margin-bottom: 0.9rem;
+    }
+    .showcase[data-live] .showcase-stage {
+      height: calc(100svh - 6.5rem);
+    }
+  }
+  /* short phones: keep the heading for screen readers only */
+  @media (max-width: 63.99rem) and (max-height: 44rem) {
+    .showcase[data-live] .showcase-head {
+      position: absolute;
+      height: 1px;
+      width: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    .showcase[data-live] .showcase-list {
+      border-top: 0;
+    }
+  }
+  /* phones and tablets: phone on top, one service at a time below it */
+  @media (max-width: 63.99rem) {
+    .showcase[data-live] .showcase-sticky {
+      align-items: stretch;
+      padding-block: 4.75rem 1rem;
+    }
+    .showcase[data-live] .showcase-grid {
+      display: flex;
+      width: 100%;
+      flex-direction: column-reverse;
+      justify-content: center;
+      gap: 1.25rem;
+    }
+    .showcase[data-live] .showcase-stage {
+      flex: none;
+      height: clamp(12rem, calc(48svh - 4rem), 30rem);
+    }
+    .showcase[data-live] .showcase-head p,
+    .showcase[data-live] .showcase-desc,
+    .showcase[data-live] .showcase-all,
+    .showcase[data-live] .showcase-item:not([data-current]) {
+      display: none;
+    }
+    .showcase[data-live] .showcase-copy h2 {
+      margin-top: 0;
+      font-size: clamp(1.75rem, 7vw, 2.75rem);
+    }
+    .showcase[data-live] .showcase-list {
+      margin-top: 0.75rem;
+      border-bottom: 0;
+    }
+    .showcase[data-live] .showcase-dots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+     Selected work: cards that stack as you scroll (large screens only)
+     ------------------------------------------------------------------------ */
+  .stack-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.75rem;
+    border: 1px solid var(--color-line);
+    background: var(--color-surface);
+  }
+  @media (min-width: 64rem) and (min-height: 44rem) {
+    .stack-item {
+      position: sticky;
+      top: calc(6.75rem + var(--i) * 1.15rem);
+    }
+    .stack-card {
+      min-height: min(38rem, calc(100vh - 12rem));
+      transform-origin: 50% 0;
+      transform: scale(calc(1 - var(--cover, 0) * 0.045));
+    }
+    .stack-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--color-ink);
+      opacity: calc(var(--cover, 0) * 0.6);
+      pointer-events: none;
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+     Device frames for screenshots
+     ------------------------------------------------------------------------ */
+  .browser {
+    overflow: hidden;
+    border-radius: 0.85rem;
+    border: 1px solid rgb(255 255 255 / 0.13);
+    background: #14141a;
+    box-shadow: 0 2.5rem 5rem -2.5rem rgb(0 0 0 / 0.85);
+  }
+  .browser-bar {
+    display: flex;
+    height: 1.9rem;
+    align-items: center;
+    gap: 0.35rem;
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+    padding-inline: 0.75rem;
+  }
+  .browser-bar i {
+    height: 0.45rem;
+    width: 0.45rem;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.2);
+  }
+  .browser-bar span {
+    /* zero base width, so a long address can never widen the card */
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 1.75rem;
+    font-size: 0.6875rem;
+    letter-spacing: 0.02em;
+    color: var(--color-faint);
+  }
+  .phone {
+    overflow: hidden;
+    border-radius: 1.5rem;
+    border: 1px solid rgb(255 255 255 / 0.18);
+    background: #0c0c11;
+    padding: 0.3rem;
+    box-shadow: 0 2rem 4rem -1.5rem rgb(0 0 0 / 0.9);
+  }
+  .phone img {
+    border-radius: 1.22rem;
+  }
+
+  /* ------------------------------------------------------------------------
+     Closing band
+     ------------------------------------------------------------------------ */
+  .band {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: 2rem;
+    background: radial-gradient(120% 150% at 88% 0%, #7b52f0 0%, var(--color-brand) 36%, #2b1080 100%);
+    color: #fff;
+  }
+  .band .contours {
+    filter: brightness(0) invert(1);
+    opacity: 0.28;
+  }
+  .band :focus-visible {
+    outline-color: #fff;
+  }
+
+  /* ------------------------------------------------------------------------
+     Footer
+     ------------------------------------------------------------------------ */
+  .footer-wordmark {
+    display: block;
+    aspect-ratio: 3408 / 336;
+    width: 100%;
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.96) 10%, rgb(255 255 255 / 0.2) 100%);
+    -webkit-mask: url('./assets/brand/wordmark.svg') center / contain no-repeat;
+    mask: url('./assets/brand/wordmark.svg') center / contain no-repeat;
+  }
+
+  /* ------------------------------------------------------------------------
+     Forms
+     ------------------------------------------------------------------------ */
+  .field-label {
+    margin-bottom: 0.55rem;
+    display: block;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-fg);
+  }
+  .field-input {
+    display: block;
+    width: 100%;
+    border-radius: 0.9rem;
+    border: 1px solid rgb(255 255 255 / 0.18);
+    background: rgb(255 255 255 / 0.04);
+    padding: 0.95rem 1.1rem;
+    font-size: 1.0625rem;
+    line-height: 1.4;
+    color: #fff;
+    transition:
+      border-color 0.2s,
+      background-color 0.2s,
+      box-shadow 0.2s;
+  }
+  .field-input::placeholder {
+    color: var(--color-faint);
+    opacity: 1;
+  }
+  .field-input:hover {
+    border-color: rgb(255 255 255 / 0.34);
+  }
+  .field-input:focus-visible {
+    border-color: var(--color-brand-300);
+    background: rgb(255 255 255 / 0.06);
+    outline: none;
+    box-shadow: 0 0 0 3px rgb(166 140 255 / 0.28);
+  }
+  .field-input[aria-invalid='true'] {
+    border-color: var(--color-danger);
+  }
+  .field-error {
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 0.4rem;
+    font-size: 0.9375rem;
+    color: var(--color-danger);
+  }
+
+  /* checkbox rendered as a selectable chip */
+  .chip {
+    position: relative;
+    display: inline-flex;
+  }
+  .chip input {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+    opacity: 0;
+  }
+  .chip span {
+    display: inline-flex;
+    height: 2.9rem;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    border: 1px solid rgb(255 255 255 / 0.2);
+    padding: 0 1.15rem;
+    font-size: 1rem;
+    color: var(--color-muted);
+    transition:
+      background-color 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+  }
+  .chip span svg {
+    display: none;
+  }
+  .chip:hover span {
+    border-color: rgb(255 255 255 / 0.45);
+    color: #fff;
+  }
+  .chip input:checked + span {
+    border-color: var(--color-brand-300);
+    background: var(--color-brand);
+    color: #fff;
+  }
+  .chip input:checked + span svg {
+    display: block;
+  }
+  .chip input:focus-visible + span {
+    outline: 2px solid var(--color-brand-300);
+    outline-offset: 3px;
+  }
+
+  .spinner {
+    height: 1.1rem;
+    width: 1.1rem;
+    border-radius: 50%;
+    border: 2px solid rgb(255 255 255 / 0.35);
+    border-top-color: #fff;
+    animation: spin 0.8s linear infinite;
+  }
+
+  /* ------------------------------------------------------------------------
+     Spotlight card (React Bits, src/components/bits/SpotlightCard.jsx)
+     A light that follows the pointer. The card draws its own 1px border, so
+     don't add a `border` class to it. Padding, radius and background come
+     from Tailwind classes on the card.
+     ------------------------------------------------------------------------ */
+  .spotlight-card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .spotlight-card__light,
+  .spotlight-card__grain,
+  .spotlight-card__border,
+  .spotlight-card__edge {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  .spotlight-card__light,
+  .spotlight-card__grain {
+    z-index: -1;
+    opacity: 0;
+  }
+  .spotlight-card__grain {
+    background-size: 160px 160px;
+    mix-blend-mode: overlay;
+  }
+  .spotlight-card__border,
+  .spotlight-card__edge {
+    z-index: 1;
+    padding: 1px;
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+  }
+  .spotlight-card__border {
+    background: var(--color-line);
+  }
+  .spotlight-card__edge {
+    opacity: 0;
+  }
+
+  /* ------------------------------------------------------------------------
+     FAQ
+     ------------------------------------------------------------------------ */
+  .faq summary {
+    display: flex;
+    cursor: pointer;
+    list-style: none;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-block: 1.6rem;
+  }
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq summary svg {
+    flex: none;
+    align-self: center;
+    transition: transform 0.4s var(--ease-expo);
+  }
+  .faq[open] summary svg {
+    transform: rotate(45deg);
+  }
+  .faq[open] .faq-body {
+    animation: fade-up 0.5s var(--ease-expo) both;
+  }
+}
+
+/* ==========================================================================
+   Hero inside the intro screen
+   That screen is a fixed-size box, so nothing may overflow it. On short
+   viewports the extras are dropped in order of importance. These rules sit
+   outside the layers on purpose, so they can override spacing utilities.
+   (They never match outside the intro: only its screen is a size container.)
+   ========================================================================== */
+@container (max-height: 760px) {
+  .hero-recent {
+    display: none;
+  }
+}
+@container (max-height: 600px) {
+  .hero-lead {
+    display: none;
+  }
+}
+@container (max-height: 480px) {
+  .hero-label {
+    display: none;
+  }
+  .hero-body {
+    padding-bottom: 1rem;
+  }
+  .hero-title {
+    margin-top: 0;
+    font-size: clamp(2.25rem, 15cqh, 6rem);
+  }
+  .hero-actions {
+    margin-top: 1rem;
+  }
+}
+
+/* ==========================================================================
+   Keyframes
+   ========================================================================== */
+@keyframes rise-in {
+  from {
+    transform: translateY(125%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes drift {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes hint-line {
+  0% {
+    transform: scaleY(0);
+    opacity: 1;
+  }
+  55% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 0;
+  }
+}
+@keyframes cap-on {
+  from {
+    opacity: 0.3;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes playhead {
+  from {
+    left: 7%;
+  }
+  to {
+    left: 93%;
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================================================
+   Reduced motion: no animation, no scroll effects, everything in its end state
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+  .hero-contours {
+    animation: none;
+  }
+  .reveal[data-reveal='hidden'] {
+    opacity: 1;
+    transform: none;
+  }
+}

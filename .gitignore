@@ -1,0 +1,21 @@
+node_modules/
+dist/
+dist-ssr/
+.env
+.env.*
+!.env.example
+.vercel/
+*.log
+
+# local only
+.claude/
+design inspo.mp4
+/*.webp
+
+# test output
+test-results/
+playwright-report/
+
+# Supabase CLI local files
+supabase/.temp/
+supabase/.branches/

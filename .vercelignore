@@ -1,0 +1,5 @@
+# Source material that the build does not need
+/design inspo.mp4
+/isoform_logo.jpeg
+/*.webp
+.claude/
